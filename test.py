@@ -3,7 +3,7 @@ import keyboard
 
 def IoTinputReader():
     # chiama il comando 'flask run' da shell/cmd
-    proc = subprocess.Popen("flask run", stdout=subprocess.PIPE, shell=True)
+    proc = subprocess.Popen("flask run", stdout=subprocess.PIPE)
     print("Server running on : http://127.0.0.1:5000/")
     while(True):
         # leggi posizione, decodificala da binary ad ASCII, e infine elimina ogni white space
@@ -22,6 +22,7 @@ def IoTinputReader():
             break
         elif (result == "Error"):
             print("\nAn error occured !")
+            proc.terminate()
             break
     return
 

@@ -22,6 +22,7 @@ def IoTinputReader():
             break
         elif (result == "Error"):
             print("\nAn error occured !")
+            # termina esecuzione processo
             proc.terminate()
             break
     return

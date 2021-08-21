@@ -116,7 +116,7 @@ def start():
                         document.getElementById(direction).style.borderColor = "#000000";
                     }
 
-                    function post(data){
+                    function post(data, key){
                         let url = "http://127.0.0.1:5000/keyCode";
                         let xhr = new XMLHttpRequest();
                         xhr.open("POST", url);
@@ -163,17 +163,18 @@ def start():
                             }};
                         xhr.send(data);
                     }
+
                     document.addEventListener('keydown', function(event) {
                         if (event.keyCode == 37) {
-                            post({'Key' : "left",});
+                            post({'Key' : "left",}, "left");
                         } else if (event.keyCode == 39) {
-                            post({'Key' : "right",});
+                            post({'Key' : "right",}, "right");
                         } else if (event.keyCode == 38) {
-                            post({'Key' : "forward",});
+                            post({'Key' : "forward",}, "forward");
                         } else if (event.keyCode == 40) {
-                            post({'Key' : "down",});
+                            post({'Key' : "down",}, "down");
                         } else {
-                            post({'Key' : "none",});
+                            post({'Key' : "none",}, "none");
                         }
                     });
                 </script>"""

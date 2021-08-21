@@ -9,6 +9,8 @@ import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+print("Server running on : http://127.0.0.1:5000/")
+
 @app.route('/')
 def start():
     return  """<style>
@@ -108,39 +110,53 @@ def start():
                     <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
                 </svg>
                 <script>
+                    function reset(arrow, direction){
+                        document.getElementById(arrow).style.fill = "black";
+                        document.getElementById("pointing").style.color = "#000000";
+                        document.getElementById(direction).style.borderColor = "#000000";
+                    }
+
                     function post(key){
                         let url = "http://127.0.0.1:5000/keyCode";
                         let xhr = new XMLHttpRequest();
                         xhr.open("POST", url);
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.setRequestHeader("Content-Type", "application/json");
+                        var timerStart = Date.now();
                         xhr.onreadystatechange = function () {
                             if (xhr.readyState === 4) {
                                 console.log(xhr.status);
                                 console.log(xhr.responseText);
-                                console.log("Load time : " + Date.now()-timerStart);
+                                console.log("Load time : " + Date.now()-timerStart.toString());
                                 if (key == "left") {
+                                    document.getElementById("pointing").innerHTML = "Left";
                                     document.getElementById("arrow_back").style.fill = "green";
                                     document.getElementById("pointing").style.color = "#008000";
                                     document.getElementById("left").style.borderColor = "#008000";
+                                    setTimeout(reset("arrow_back", "left"), 100);
                                 } else if (key == "right") {
+                                    document.getElementById("pointing").innerHTML = "Right";
                                     document.getElementById("arrow_forward").style.fill = "blue";
                                     document.getElementById("pointing").style.color = "#0000FF";
                                     document.getElementById("right").style.borderColor = "#0000FF";
+                                    setTimeout(reset("arrow_forward", "right"), 100);
                                 } else if (key == "forward") {
+                                    document.getElementById("pointing").innerHTML = "Forward";
                                     document.getElementById("arrow_upward").style.fill = "purple";
                                     document.getElementById("pointing").style.color = "#800080";
                                     document.getElementById("up").style.borderColor = "#800080";
+                                    setTimeout(reset("arrow_upward", "up"), 100);
                                 } else if (key == "backward") {
+                                    document.getElementById("pointing").innerHTML = "Backward";
                                     document.getElementById("arrow_downward").style.fill = "orange";
                                     document.getElementById("pointing").style.color = "#FFA500";
                                     document.getElementById("down").style.borderColor = "#FFA500";
+                                    setTimeout(reset("arrow_downward", "down"), 100);
+                                } else if (key == "none") {
+                                    document.getElementById("pointing").innerHTML = "None";
                                 }
                             }};
-                        let data = `{
-                            "Key": key,
-                        }`;
-                        var timerStart = Date.now();
+                        let data = {'Key' : key,};
                         xhr.send(data);
                     }
                     document.addEventListener('keydown', function(event) {
@@ -161,6 +177,8 @@ def start():
 @app.route('/keyCode', methods=["POST"])
 def post():
     key = request.form.get("Key")
+    print("key : ", end = "")
+    print(key)
     if (key == "left"):
         sys.stdout.write("Left\n")
         sys.stdout.flush()

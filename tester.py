@@ -2,6 +2,7 @@ from flask import Flask, request
 import keyboard
 import time
 import sys
+import json
 
 app = Flask(__name__)
 
@@ -13,7 +14,8 @@ print("Server running on : http://127.0.0.1:5000/")
 
 @app.route('/')
 def start():
-    return  """<style>
+    return  """<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <style>
                     #right {
                         position: absolute;
                         width: 150px;
@@ -88,11 +90,11 @@ def start():
                     }
                     #pointing{
                         position: absolute;   
-                        left: 850px;
+                        left: 883px;
                         top: 150px;
                     }
                 </style>
-                <h1 id="pointing">Backward</h1>
+                <h1 id="pointing">None</h1>
                 <div id="right"></div>
                 <div id="left"></div>
                 <div id="down"></div>
@@ -114,15 +116,50 @@ def start():
                         document.getElementById(arrow).style.fill = "black";
                         document.getElementById("pointing").style.color = "#000000";
                         document.getElementById(direction).style.borderColor = "#000000";
+                        document.getElementById("pointing").innerHTML = "None";
+                        document.getElementById("pointing").style.left = "883px";
                     }
 
                     function post(data, key){
-                        let url = "http://127.0.0.1:5000/keyCode";
-                        let xhr = new XMLHttpRequest();
+                        var timerStart = Date.now();
+                        $.post("/keyCode", data, function(data, status){
+                            console.log(status);
+                            console.log(data);
+                            console.log(Date.now()-timerStart);
+                            if (key == "left") {
+                                document.getElementById("arrow_back").style.fill = "green";
+                                document.getElementById("pointing").innerHTML = "Left";
+                                document.getElementById("pointing").style.color = "#008000";
+                                document.getElementById("pointing").style.left = "890px";
+                                document.getElementById("left").style.borderColor = "#008000";
+                                setTimeout(reset("arrow_back", "left"), 500);
+                            } else if (key == "right") {
+                                document.getElementById("arrow_forward").style.fill = "blue";
+                                document.getElementById("pointing").innerHTML = "Right";
+                                document.getElementById("pointing").style.color = "#0000FF";
+                                document.getElementById("pointing").style.left = "882px";
+                                document.getElementById("right").style.borderColor = "#0000FF";
+                                setTimeout(reset("arrow_forward", "right"), 500);
+                            } else if (key == "forward") {
+                                document.getElementById("arrow_upward").style.fill = "purple";
+                                document.getElementById("pointing").innerHTML = "Forward";
+                                document.getElementById("pointing").style.color = "#800080";
+                                document.getElementById("pointing").style.left = "860px";
+                                document.getElementById("up").style.borderColor = "#800080";
+                                setTimeout(reset("arrow_upward", "up"), 500);
+                            } else if (key == "backward") {
+                                document.getElementById("arrow_downward").style.fill = "orange";
+                                document.getElementById("pointing").innerHTML = "Backward";
+                                document.getElementById("pointing").style.color = "#FFA500";
+                                document.getElementById("pointing").style.left = "850px";
+                                document.getElementById("down").style.borderColor = "#FFA500";
+                                setTimeout(reset("arrow_downward", "down"), 500);
+                            }
+                        });
+                        /*let xhr = new XMLHttpRequest();
                         xhr.open("POST", url);
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.setRequestHeader("Content-Type", "application/json");
-                        var timerStart = Date.now();
                         xhr.onreadystatechange = function () {
                             if (xhr.readyState === 4) {
                                 console.log(xhr.status);
@@ -134,34 +171,31 @@ def start():
                                     document.getElementById("pointing").style.color = "#008000";
                                     document.getElementById("pointing").style.left = "890px";
                                     document.getElementById("left").style.borderColor = "#008000";
-                                    setTimeout(reset("arrow_back", "left"), 100);
+                                    setTimeout(reset("arrow_back", "left"), 500);
                                 } else if (key == "right") {
                                     document.getElementById("arrow_forward").style.fill = "blue";
                                     document.getElementById("pointing").innerHTML = "Right";
                                     document.getElementById("pointing").style.color = "#0000FF";
                                     document.getElementById("pointing").style.left = "882px";
                                     document.getElementById("right").style.borderColor = "#0000FF";
-                                    setTimeout(reset("arrow_forward", "right"), 100);
+                                    setTimeout(reset("arrow_forward", "right"), 500);
                                 } else if (key == "forward") {
                                     document.getElementById("arrow_upward").style.fill = "purple";
                                     document.getElementById("pointing").innerHTML = "Forward";
                                     document.getElementById("pointing").style.color = "#800080";
                                     document.getElementById("pointing").style.left = "860px";
                                     document.getElementById("up").style.borderColor = "#800080";
-                                    setTimeout(reset("arrow_upward", "up"), 100);
+                                    setTimeout(reset("arrow_upward", "up"), 500);
                                 } else if (key == "backward") {
                                     document.getElementById("arrow_downward").style.fill = "orange";
                                     document.getElementById("pointing").innerHTML = "Backward";
                                     document.getElementById("pointing").style.color = "#FFA500";
                                     document.getElementById("pointing").style.left = "850px";
                                     document.getElementById("down").style.borderColor = "#FFA500";
-                                    setTimeout(reset("arrow_downward", "down"), 100);
-                                } else if (key == "none") {
-                                    document.getElementById("pointing").innerHTML = "None";
-                                    document.getElementById("pointing").style.left = "883px";
+                                    setTimeout(reset("arrow_downward", "down"), 500);
                                 }
                             }};
-                        xhr.send(data);
+                        xhr.send(data);*/
                     }
 
                     document.addEventListener('keydown', function(event) {
@@ -173,15 +207,14 @@ def start():
                             post({'Key' : "forward",}, "forward");
                         } else if (event.keyCode == 40) {
                             post({'Key' : "down",}, "down");
-                        } else {
-                            post({'Key' : "none",}, "none");
                         }
                     });
                 </script>"""
 
 @app.route('/keyCode', methods=["POST"])
 def post():
-    key = request.form.get("Key")
+    data = request.form['Key']
+    key = json.loads(data)[0]
     print("key : ", end = "")
     print(key)
     if (key == "left"):
@@ -200,10 +233,6 @@ def post():
         sys.stdout.write("Backward\n")
         sys.stdout.flush()
         return "Key found", 200  
-    elif (key == "none"):
-        sys.stdout.write("None\n")
-        sys.stdout.flush()
-        return "Key found", 200
     else:
         sys.stdout.write("Error\n")
         sys.stdout.flush()

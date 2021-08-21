@@ -116,7 +116,7 @@ def start():
                         document.getElementById(direction).style.borderColor = "#000000";
                     }
 
-                    function post(key){
+                    function post(data){
                         let url = "http://127.0.0.1:5000/keyCode";
                         let xhr = new XMLHttpRequest();
                         xhr.open("POST", url);
@@ -129,47 +129,51 @@ def start():
                                 console.log(xhr.responseText);
                                 console.log("Load time : " + Date.now()-timerStart.toString());
                                 if (key == "left") {
-                                    document.getElementById("pointing").innerHTML = "Left";
                                     document.getElementById("arrow_back").style.fill = "green";
+                                    document.getElementById("pointing").innerHTML = "Left";
                                     document.getElementById("pointing").style.color = "#008000";
+                                    document.getElementById("pointing").style.left = "890px";
                                     document.getElementById("left").style.borderColor = "#008000";
                                     setTimeout(reset("arrow_back", "left"), 100);
                                 } else if (key == "right") {
-                                    document.getElementById("pointing").innerHTML = "Right";
                                     document.getElementById("arrow_forward").style.fill = "blue";
+                                    document.getElementById("pointing").innerHTML = "Right";
                                     document.getElementById("pointing").style.color = "#0000FF";
+                                    document.getElementById("pointing").style.left = "882px";
                                     document.getElementById("right").style.borderColor = "#0000FF";
                                     setTimeout(reset("arrow_forward", "right"), 100);
                                 } else if (key == "forward") {
-                                    document.getElementById("pointing").innerHTML = "Forward";
                                     document.getElementById("arrow_upward").style.fill = "purple";
+                                    document.getElementById("pointing").innerHTML = "Forward";
                                     document.getElementById("pointing").style.color = "#800080";
+                                    document.getElementById("pointing").style.left = "860px";
                                     document.getElementById("up").style.borderColor = "#800080";
                                     setTimeout(reset("arrow_upward", "up"), 100);
                                 } else if (key == "backward") {
-                                    document.getElementById("pointing").innerHTML = "Backward";
                                     document.getElementById("arrow_downward").style.fill = "orange";
+                                    document.getElementById("pointing").innerHTML = "Backward";
                                     document.getElementById("pointing").style.color = "#FFA500";
+                                    document.getElementById("pointing").style.left = "850px";
                                     document.getElementById("down").style.borderColor = "#FFA500";
                                     setTimeout(reset("arrow_downward", "down"), 100);
                                 } else if (key == "none") {
                                     document.getElementById("pointing").innerHTML = "None";
+                                    document.getElementById("pointing").style.left = "883px";
                                 }
                             }};
-                        let data = {'Key' : key,};
                         xhr.send(data);
                     }
                     document.addEventListener('keydown', function(event) {
                         if (event.keyCode == 37) {
-                            post("left")
+                            post({'Key' : "left",});
                         } else if (event.keyCode == 39) {
-                            post("right")
+                            post({'Key' : "right",});
                         } else if (event.keyCode == 38) {
-                            post("forward")
+                            post({'Key' : "forward",});
                         } else if (event.keyCode == 40) {
-                            post("down")
+                            post({'Key' : "down",});
                         } else {
-                            post("none")
+                            post({'Key' : "none",});
                         }
                     });
                 </script>"""

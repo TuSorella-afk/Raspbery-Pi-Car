@@ -125,35 +125,36 @@ def start():
                         $.post("/keyCode?key=" + key, function(data, status){
                             console.log(status);
                             console.log(data);
-                            console.log(Date.now()-timerStart);
+                            let loadTime = Date.now()-timerStart;
+                            console.log("Loadtime : " + loadTime.toString());
                             if (key == "left") {
                                 document.getElementById("arrow_back").style.fill = "green";
                                 document.getElementById("pointing").innerHTML = "Left";
                                 document.getElementById("pointing").style.color = "#008000";
                                 document.getElementById("pointing").style.left = "890px";
                                 document.getElementById("left").style.borderColor = "#008000";
-                                setTimeout(reset("arrow_back", "left"), 500);
+                                //setTimeout(reset("arrow_back", "left"), 500);
                             } else if (key == "right") {
                                 document.getElementById("arrow_forward").style.fill = "blue";
                                 document.getElementById("pointing").innerHTML = "Right";
                                 document.getElementById("pointing").style.color = "#0000FF";
                                 document.getElementById("pointing").style.left = "882px";
                                 document.getElementById("right").style.borderColor = "#0000FF";
-                                setTimeout(reset("arrow_forward", "right"), 500);
+                                //setTimeout(reset("arrow_forward", "right"), 500);
                             } else if (key == "forward") {
                                 document.getElementById("arrow_upward").style.fill = "purple";
                                 document.getElementById("pointing").innerHTML = "Forward";
                                 document.getElementById("pointing").style.color = "#800080";
                                 document.getElementById("pointing").style.left = "860px";
                                 document.getElementById("up").style.borderColor = "#800080";
-                                setTimeout(reset("arrow_upward", "up"), 500);
+                                //setTimeout(reset("arrow_upward", "up"), 500);
                             } else if (key == "backward") {
                                 document.getElementById("arrow_downward").style.fill = "orange";
                                 document.getElementById("pointing").innerHTML = "Backward";
                                 document.getElementById("pointing").style.color = "#FFA500";
                                 document.getElementById("pointing").style.left = "850px";
                                 document.getElementById("down").style.borderColor = "#FFA500";
-                                setTimeout(reset("arrow_downward", "down"), 500);
+                                //setTimeout(reset("arrow_downward", "down"), 500);
                             }
                         });
                     }

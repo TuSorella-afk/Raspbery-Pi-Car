@@ -4,7 +4,6 @@ import time
 import sys
 
 app = Flask(__name__)
-host = "http://127.0.0.1:5000/"
 
 import logging
 log = logging.getLogger('werkzeug')

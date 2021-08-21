@@ -127,7 +127,7 @@ def start():
                             if (xhr.readyState === 4) {
                                 console.log(xhr.status);
                                 console.log(xhr.responseText);
-                                console.log("Load time : " + Date.now()-timerStart.toString());
+                                console.log(Date.now()-timerStart);
                                 if (key == "left") {
                                     document.getElementById("arrow_back").style.fill = "green";
                                     document.getElementById("pointing").innerHTML = "Left";

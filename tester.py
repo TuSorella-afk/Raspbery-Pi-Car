@@ -112,15 +112,22 @@ def start():
                     <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
                 </svg>
                 <script>
-                    function reset(arrow, direction){
-                        document.getElementById(arrow).style.fill = "black";
+                    var keycode = 0;
+                    function reset(){
                         document.getElementById("pointing").style.color = "#000000";
-                        document.getElementById(direction).style.borderColor = "#000000";
                         document.getElementById("pointing").innerHTML = "None";
                         document.getElementById("pointing").style.left = "883px";
+                        document.getElementById("arrow_back").style.fill = "black";
+                        document.getElementById("left").style.borderColor = "#000000";
+                        document.getElementById("arrow_forward").style.fill = "black";
+                        document.getElementById("right").style.borderColor = "#000000";      
+                        document.getElementById("arrow_upward").style.fill = "black";
+                        document.getElementById("up").style.borderColor = "#000000";      
+                        document.getElementById("arrow_downward").style.fill = "black";
+                        document.getElementById("down").style.borderColor = "#000000";
                     }
 
-                    function post(key){
+                    function post(key, isPressed){
                         var timerStart = Date.now();
                         $.post("/keyCode?key=" + key, function(data, status){
                             console.log(status);
@@ -133,41 +140,57 @@ def start():
                                 document.getElementById("pointing").style.color = "#008000";
                                 document.getElementById("pointing").style.left = "890px";
                                 document.getElementById("left").style.borderColor = "#008000";
-                                //setTimeout(reset("arrow_back", "left"), 500);
+                                if (!isPressed){
+                                    setTimeout(reset, 250);
+                                }
                             } else if (key == "right") {
                                 document.getElementById("arrow_forward").style.fill = "blue";
                                 document.getElementById("pointing").innerHTML = "Right";
                                 document.getElementById("pointing").style.color = "#0000FF";
                                 document.getElementById("pointing").style.left = "882px";
                                 document.getElementById("right").style.borderColor = "#0000FF";
-                                //setTimeout(reset("arrow_forward", "right"), 500);
+                                if (!isPressed){
+                                    setTimeout(reset, 250);
+                                }
                             } else if (key == "forward") {
                                 document.getElementById("arrow_upward").style.fill = "purple";
                                 document.getElementById("pointing").innerHTML = "Forward";
                                 document.getElementById("pointing").style.color = "#800080";
                                 document.getElementById("pointing").style.left = "860px";
                                 document.getElementById("up").style.borderColor = "#800080";
-                                //setTimeout(reset("arrow_upward", "up"), 500);
+                                if (!isPressed){
+                                    setTimeout(reset, 250);
+                                }
                             } else if (key == "backward") {
                                 document.getElementById("arrow_downward").style.fill = "orange";
                                 document.getElementById("pointing").innerHTML = "Backward";
                                 document.getElementById("pointing").style.color = "#FFA500";
                                 document.getElementById("pointing").style.left = "850px";
                                 document.getElementById("down").style.borderColor = "#FFA500";
-                                //setTimeout(reset("arrow_downward", "down"), 500);
+                                if (!isPressed){
+                                    setTimeout(reset, 250);
+                                }
                             }
                         });
                     }
 
                     document.addEventListener('keydown', function(event) {
                         if (event.keyCode == 37) {
-                            post("left");
+                            let isPressed = keycode == 37;
+                            post("left", isPressed);
+                            keycode = 37;
                         } else if (event.keyCode == 39) {
-                            post("right");
+                            let isPressed = keycode == 39;                              
+                            post("right", isPressed);
+                            keycode = 39;
                         } else if (event.keyCode == 38) {
-                            post("forward");
+                            let isPressed = keycode == 38;                            
+                            post("forward", isPressed);
+                            keycode = 38;
                         } else if (event.keyCode == 40) {
-                            post("backward");
+                            let isPressed = keycode == 40;                           
+                            post("backward", isPressed);
+                            keycode = 40;
                         }
                     });
                 </script>"""
